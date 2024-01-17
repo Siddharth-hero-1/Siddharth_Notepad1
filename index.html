@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sid_Notepad</title>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      background: teal;
+      border: 1.49vh double white;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    #note {
+      height: 66vh;
+      border: none;
+      background: rgba(255, 255, 255, .31);
+      z-index: 5;
+      width: 81%;
+      outline: none;
+      padding: 1.2vh;
+      box-sizing: border-box;
+      font-size: 3vh;
+      font-weight: bolder;
+      text-shadow: 0px 0px 3px white;
+      overflow: hidden
+    }
+
+    #note:focus {
+      height: 58vh;
+      z-index: 10;
+      background: rgba(255, 255, 255, 1);
+      font-size: 5vh;
+      border-radius: 2.24vh
+    }
+
+    ::placeholder {
+      color: #0E00FF;
+      font-size: 3.43vh;
+      text-shadow: 0px 0px 4px rgba(238, 238, 238, 1)
+    }
+
+    #tools {
+      position: absolute;
+      bottom: 1.88vh;
+      right: 3.5vw;
+    }
+
+    #tools span {
+      filter: hue-rotate(200deg);
+      transition: .3s;
+      background: rgba(0, 0, 0, 1);
+      color: rgba(179, 162, 106, 1);
+      display: block;
+      padding: 1.04vh 2.78vw;
+      font-size: 2.98vh;
+      user-select: none;
+    }
+
+    #tools::before {
+      content: "";
+      position: absolute;
+      z-index: -8;
+      background: orangered;
+      height: 1.49vh;
+      width: 4.16vw;
+      top: 0px;
+      left: 0px;
+      animation: s 1s infinite linear;
+    }
+
+    #tools::after {
+      content: "";
+      position: absolute;
+      z-index: -8;
+      background: greenyellow;
+      height: 1.5vh;
+      width: 4.18vw;
+      top: 0px;
+      left: 0px;
+      opacity: 0;
+      animation: s 1s infinite 1.3s linear;
+    }
+
+    @keyframes s {
+      0% {
+        opacity: 1;
+        transform: translateX(-0.74vw) translateY(-0.4vh)
+      }
+
+      25% {
+        transform: translateX(13.325vw) translateY(0px)
+      }
+
+      50% {
+        transform: translateX(13.325vw) translateY(4.49vh)
+      }
+
+      75% {
+        transform: translateX(-0.56vw) translateY(4.49vh)
+      }
+
+      100% {
+        opacity: 1;
+
+        transform: translateX(-0.74vw) translateY(-0.4vh)
+      }
+    }
+
+    #tools span:active {
+      background: rgba(255, 255, 255, 12);
+      filter: hue-rotate(-10deg);
+
+    }
+
+    #welcome {
+      position: absolute;
+      top: 2.99vh;
+      width: 90%;
+      background: rgba(108, 110, 11, 0.5);
+      display: flex;
+      justify-content: center;
+      height: 5.9vh;
+      font-size: 4.84vh
+    }
+
+    #welcome span {
+      color: white;
+      display: block;
+      position: absolute;
+      text-align: center;
+      opacity: 0;
+      user-select: none;
+    }
+
+    #welcome span:nth-child(1) {
+      animation: t 4s infinite linear;
+    }
+
+    @keyframes t {
+      0% {
+        opacity: 1
+      }
+
+      33.3% {
+        opacity: 1
+      }
+
+      33.4% {
+        opacity: 0
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    #welcome span:nth-child(2) {
+      animation: t2 4s infinite linear;
+    }
+
+    @keyframes t2 {
+      0% {
+        opacity: 0
+      }
+
+      33.3% {
+        opacity: 0
+      }
+
+      33.4% {
+        opacity: 1
+      }
+
+      66.6% {
+        opacity: 1
+      }
+
+      66.7% {
+        opacity: 0
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    #welcome span:nth-child(3) {
+      animation: t3 4s infinite linear;
+    }
+
+    @keyframes t3 {
+      0% {
+        opacity: 0
+      }
+
+      66.6% {
+        opacity: 0
+      }
+
+      66.7% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    #opt {
+      position: absolute;
+      bottom: 7.47vh;
+      right: 19.4vw;
+      background: #42445A;
+      display: flex;
+      display: none;
+      justify-content: space-around;
+      flex-direction: column;
+      color: white;
+      z-index: 6;
+      padding: 0.74vh 1.38vw;
+
+      font-size: 4.84vh;
+    }
+
+    #opt span {
+      margin-top: 0.74vh;
+      margin-bottom: 0.73vh;
+
+      padding: 0.74vh 1.38vw;
+
+      border: 0.37vh solid #44497E;
+      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.67), 0px 0px 25px rgba(0, 0, 0, 0.75), 0px 0px 3px rgba(0, 0, 0, 0.75);
+      user-select: none
+    }
+
+    #opt span:active {
+      box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.67), 0px 0px 25px rgba(0, 0, 0, 0.75), inset 0px 0px 3px rgba(0, 0, 0, 0.75)
+    }
+
+    .tab {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      z-index: 7;
+      box-sizing: border-box;
+
+    }
+
+    #ope {
+      background: darkseagreen;
+      border: 1.19vh double rgba(244, 0, 202, 1);
+      display: none;
+
+    }
+
+    #save {
+      border: 1.19vh double yellow;
+      color: yellow;
+      background: salmon;
+      display: none;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+
+    }
+
+    #save input {
+      border: none;
+      border-bottom: 1px solid yellow;
+      border-left: 1px solid yellow;
+      background: none;
+      color: blue;
+      padding: 0.89vh 1.67vw;
+      font-size: 2.9vh
+    }
+
+    #save input:focus {
+      background: rgba(0, 255, 218, 0.67);
+      outline: none
+    }
+
+    #save button {
+      padding: 0.89vh 1.66vw;
+      font-size: 2.98vh;
+      color: blue;
+      background: rgba(245, 228, 228, 0.5);
+      box-shadow: 5px 5px 3px yellow
+    }
+
+    #ope input {
+      background: none;
+      position: absolute;
+      left: calc(50% - 35.83vw);
+      top: 1.19vh;
+      height: 5.97vh;
+      border: none;
+      font-size: 2.9vh;
+      outline: none;
+      width: 71.67vw;
+      padding: 0.7vh 1vw;
+      border-bottom: 1px solid rgba(244, 0, 202, 1);
+      border-left: 1px solid rgba(244, 0, 202, 1);
+      color: rgba(244, 0, 0, 1);
+
+    }
+
+    #ope input:focus {
+      background: rgba(0, 255, 218, 0.67);
+      font-size: 3.5vh;
+
+    }
+
+    #ofile {
+      height: 75vh;
+      width: 100%;
+      background: rgba(244, 245, 252, 0.27);
+      position: absolute;
+      display: flex;
+      flex-wrap: wrap;
+      bottom: 0;
+      overflow: auto;
+    }
+
+    #ofile div {
+      height: 37.3vh;
+      background: red;
+      display: flex;
+      flex-direction: column;
+      padding: 0.29vh 0.55vw;
+      justify-content: space-between;
+      box-sizing: border-box;
+      width: 46.4vw;
+      margin: 0.29vh 0.55vw;
+      z-index: 3;
+
+    }
+
+    #ofile div section {
+      display: flex;
+
+    }
+
+    #ofile div textarea {
+      height: 29.8vh;
+      padding: 0.15vh 0.25vw;
+      color: white;
+      background: #769CE9;
+      font-weight: bold;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 2.39vh;
+      box-shadow: inset 0px 0px 4px black
+    }
+
+    #ofile div textarea[disabled] {
+      background: #E97676;
+
+    }
+
+    #ofile div textarea:focus {
+      background: teal;
+    }
+
+    #ofile div button {
+      height: 5.9vh;
+      width: 100%;
+      font-size: 2.39vh
+    }
+
+    #bope,
+    #bba {
+      padding: 0.89vh 1.6vw;
+      font-size: 2.9vh;
+      color: blue;
+      background: rgba(245, 228, 228, 0.5);
+      box-shadow: 5px 5px 3px yellow;
+      height: 5.97vh;
+      z-index: 2;
+      position: absolute;
+      top: 13.45vh;
+      right: 43%;
+    }
+
+    #ope input:focus+#bope {
+      z-index: 4;
+      background: #3A3B41
+    }
+
+    #bba {
+      right: 1.38vw;
+
+    }
+
+    h4 {
+      background: #E72684;
+      text-align: center;
+      font-size: 3.2vh
+    }
+
+    #about {
+      background: #FF0000;
+      position: absolute;
+      bottom: 1.94vh;
+      font-size: 2vh;
+      left: 3.6vw;
+      color: white;
+      text-align: center;
+      animation: ct 4s infinite linear;
+      padding: 1.49vh 2.7vw;
+    }
+
+    @keyframes ct {
+      0% {
+        filter: hue-rotate(0deg);
+      }
+
+      50% {
+        filter: hue-rotate(-180deg);
+      }
+
+      100% {
+        filter: hue-rotate(360deg);
+      }
+    }
+
+    #maininfo {
+      height: 130vh;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+      display: none;
+      user-select: none;
+      align-items: center;
+      flex-direction: column;
+      background: red;
+    }
+
+    #footer {
+      height: 30vh;
+      width: 100%;
+      text-align: center;
+      display: block;
+      color: white;
+      background: gray;
+      font-size: 3.5vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      flex-direction: column;
+    }
+
+    #information {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      background: repeating-conic-gradient(wheat 0deg, wheat 90deg, grey 90deg, grey 180deg);
+      background-size: 5.97vh 5.97vh;
+      padding: 1.19vh 1.49vh;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: space-evenly;
+      flex-direction: column;
+    }
+
+    #warn,
+    #info {
+      display: flex;
+      border-radius: 2.2vh;
+      background: #F2FF5C5E;
+      align-self: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #6F0000;
+      font-size: 2.9vh;
+      padding: 1vh;
+      font-weight: bolder;
+    }
+
+    #warn h1,
+    #info h1 {
+      text-align: center
+    }
+
+    #author {
+      height: 29.8vh;
+      width: 100%;
+      background: url("Siddharth.jpg");
+      background-size: cover;
+      position: relative;
+      border-radius: 2.24vh;
+    }
+
+    #author span {
+      background: linear-gradient(brown, red, orange, yellow, yellowgreen, green);
+      display: inline-block;
+      font-size: 3.73vh;
+      font-weight: bolder;
+      color: transparent;
+      -webkit-background-clip: text;
+      position: absolute;
+      bottom: 0;
+      right: 1px;
+    }
+
+    #author:hover {
+      height: 89.6vh;
+      position: fixed;
+      top: 5vh;
+      left: 0
+    }
+
+    #info {
+      background: #F9FAFF5C;
+      color: #9B0000;
+      font-weight: bolder;
+      font-size: 2.39vh;
+      height: 20vh;
+      overflow: hidden;
+      display: block;
+    }
+
+    #info:hover {
+      height: 86vh;
+      font-size: 3.5vh;
+      position: fixed;
+      top: 7vh;
+      left: 5vw;
+      width: 90vw;
+      box-sizing: border-box;
+      background: #F1F2FF
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <h1 id="welcome">
+    <span>🤗 Welcome 🤗</span>
+    <span>To My</span>
+    <span>📃 Notepad 🖌️</span>
+  </h1>
+
+
+  <textarea name="" id="note" rows="8" cols="40" placeholder="Type your notes here..."></textarea>
+
+
+  <div id="tools">
+    <span>⚙️...</span>
+  </div>
+
+
+  <div id="opt">
+    <span id="o">📖Open📖</span>
+    <span id="s">📝Save📝</span>
+    <span id="c">🧹Clear🧹</span>
+  </div>
+
+
+  <div id="save" class="tab">
+
+    <h4>
+      To save file, firstly write some text in notepad..<br>File name should be of four words
+    </h4>
+
+    <input type="text" id="fn" placeholder="Enter file name" maxlength="12">
+
+    <button id="sav_b">
+      Can't save
+    </button>
+
+    <button id="backs">
+      Back
+    </button>
+
+  </div>
+
+
+  <div id="ope" class="tab">
+
+    <input type="text" id="fno" placeholder="Enter file name to open">
+
+    <button id="bope">Open</button>
+
+    <button id="bba">Back</button>
+
+    <div id="ofile"></div>
+  </div>
+
+
+
+
+
+  <div id="about">About
+  </div>
+  <div id="maininfo">
+
+
+    <div id="information">
+      <div id="warn">
+        <h1>Warning</h1>
+        <p>Your data is stored here and you can access it any where any time...</p>
+
+        <p>Your data will only be cleared when you clear the browser cache...</p>
+
+      </div>
+      <div id="author">
+        <span>Siddharth</span>
+      </div>
+      <div id="info">
+        <h1>SORRY!</h1>for any problem or error, you faced on my webpage <br>
+        <p>I "Siddharth" built this webpage (Notepad) only for my programming (js) practice so I did not focus on the responsiveness of the webpage.</p>
+        <p>I am a student of class 9th and learning programming from YouTube and I had made many projects for my practice.</p>
+        <p>When I came to know that I can host my website for free, I hosted it... <br>:⁠-⁠) :⁠^⁠)</p>
+
+
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+
+      <div><b>Author:</b> <i>Siddharth</i></div>
+
+      <div><b>Email:</b><i><a href="mailto: herosiddharthspck@gmail.com"> Click to mail</a></i></div>
+
+<div><b><i><a href="https://youtube.com/@CodeWithHarry?si=LI4lWbJdWCb4-GAX">Click to visit channel from which I learn programming</a></i></b></div>
+
+      <div> <b><i>©All rights reserved 2024</i></b>
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+  <script>
+    tools.addEventListener('click', () => {
+
+      if (opt.style.display == 'flex') {
+        opt.style.display = 'none'
+      }
+
+      else {
+        opt.style.display = 'flex'
+      }
+
+    });
+
+
+    note.addEventListener('focus', () => {
+      opt.style = 'display:none'
+    })
+
+
+    o.addEventListener('click', () => {
+      ope.style.display = 'flex'
+    });
+
+
+    c.addEventListener('click', () => {
+      note.value = ''
+    });
+
+
+    s.addEventListener('click', () => {
+      save.style.display = 'flex'
+    });
+
+
+    setInterval(() => {
+
+      if (fn.value.trim().length > 3 && note.value != '') {
+        sav_b.innerText = 'Save'
+      }
+
+      else {
+        sav_b.innerText = "Can't save"
+      }
+
+    }, 100);
+
+
+    sav_b.addEventListener('click', () => {
+
+      if (sav_b.innerText == 'Save') {
+        localStorage.setItem(fn.value.trim(), note.value);
+        fn.value = '';
+        note.value = ''
+        sav_b.innerText = "Can't save"
+      }
+
+      else {
+        alert('Either you have not entered the file name(containg more than three words) or the text in notepad')
+      }
+
+    })
+
+
+    backs.addEventListener('click', () => {
+      save.style.display = 'none'
+    });
+
+
+    bba.addEventListener('click', () => {
+      ope.style.display = 'none'
+    });
+
+    var fiarr = [];
+
+    bope.addEventListener('click', () => {
+
+      if (localStorage.getItem(fno.value.trim()) != null) {
+
+        if ((fiarr.includes(fno.value.trim())) != true) {
+
+
+          fiarr.push(fno.value.trim())
+          let d = document.createElement('div');
+          let h4 = document.createElement('h4');
+          h4.innerText = fno.value.trim();
+          let bu = document.createElement('button');
+          let buc = document.createElement('button');
+          let bud = document.createElement('button');
+          let sec = document.createElement('section');
+
+          buc.innerText = 'Cut';
+          bud.innerText = 'Delete';
+
+          bu.innerText = 'Edit';
+          sec.appendChild(bu)
+          sec.appendChild(buc)
+          sec.appendChild(bud)
+
+          let b = document.createElement('textarea');
+          b.setAttribute('disabled', '')
+          b.value = localStorage.getItem(fno.value.trim());
+          d.appendChild(h4);
+          d.appendChild(b);
+          d.appendChild(sec);
+          ofile.insertBefore(d, ofile.firstChild);
+          var x = fno.value.trim();
+          fno.value = '';
+
+          buc.addEventListener('click', () => {
+            fiarr.splice((fiarr.indexOf(buc.parentNode.parentNode.firstChild.innerText)), 1)
+
+            ofile.removeChild(buc.parentNode.parentNode);
+          })
+          bud.addEventListener('click', () => {
+            fiarr.splice((fiarr.indexOf(buc.parentNode.parentNode.firstChild.innerText)), 1)
+            localStorage.removeItem(buc.parentNode.parentNode.firstChild.innerText);
+
+            ofile.removeChild(buc.parentNode.parentNode);
+            alert('File is being removed..')
+          })
+
+          bu.addEventListener('click', () => {
+
+            if (bu.innerText == 'Edit') {
+
+              b.removeAttribute('disabled');
+              b.focus();
+              bu.innerText = 'Save';
+
+            }
+
+            else if (bu.innerText == 'Save') {
+
+              localStorage.setItem(x, b.value);
+              b.setAttribute('disabled', '');
+              bu.innerText = 'Edit';
+
+            }
+
+          })
+
+          b.addEventListener('focus', () => {
+            b.parentNode.style = 'width: 340px'
+
+          })
+          b.addEventListener('focusout', () => {
+            b.parentNode.style = 'width: 160px'
+
+          })
+
+        }
+
+        else {
+          alert('File already opened')
+        }
+
+
+      }
+
+      else {
+        alert('File name is wrong')
+      }
+
+    })
+
+
+    var about = document.getElementById('about')
+    var information = document.getElementById('maininfo')
+    about.addEventListener('click', () => {
+      if (information.style.display != 'flex') {
+        information.style.display = 'flex';
+        about.style = 'z-index:90; bottom: 95vh;'
+        about.innerText = 'Back'
+
+      }
+      else {
+        information.style.display = 'none';
+        about.style = 'z-index:1'
+        about.innerText = 'About'
+
+      }
+
+    })
+  </script>
+</body>
+
+</html>
